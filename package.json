@@ -1,0 +1,29 @@
+{
+  "name": "b35we-node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "double.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SangeethaShanmugm/b35we-node.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SangeethaShanmugm/b35we-node/issues"
+  },
+  "homepage": "https://github.com/SangeethaShanmugm/b35we-node#readme",
+  "dependencies": {
+    "express": "^4.18.1",
+    "mongodb": "^4.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
