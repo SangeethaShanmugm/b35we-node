@@ -3,12 +3,14 @@
 import express from "express";
 import { MongoClient } from 'mongodb'; //type -module
 import * as dotenv from 'dotenv'
+import { moviesRouter} from "./routes/movie.js"
+import { usersRouter} from "./routes/users.js"
 
 dotenv.config()
 
-console.log(process.env);
+// console.log(process.env);
 
-const app = express();
+export const app = express();
 const PORT = process.env.PORT;
 
 // const movies = [
@@ -103,7 +105,7 @@ async function createConnection() {
   return client;
 }
 
-const client =  await createConnection();
+export const client =  await createConnection();
 
 //interpreter - converting body to json
 app.use(express.json())
@@ -113,102 +115,13 @@ app.get('/', function (request, response) {
   response.send('Hello 🥳🥳🥳 Everyone !!!')
 })
 
-//movies
 
-app.get('/movies', async (request, response) =>{
-    // const { language, rating } = request.query;
-    // console.log(request.query, language);
-    // let filteredMovies = movies;
-    
-    // if(language) {
-    //     filteredMovies = filteredMovies.filter((mv) => mv.language == language)  
-    // }
-
-    // if(rating) {
-    //     filteredMovies = filteredMovies.filter((mv) => mv.rating == +rating)  
-    // }
-
-    if (request.query.rating){
-      request.query.rating = +request.query.rating;
-    }
-   //db.movies.find({})
-
-      const movie = await client
-   .db("b35we")
-   .collection("movies")
-   .find(request.query)
-   .toArray();
-    response.send(movie)
-  })
-  
-  //POST movies
- //inbuild middleware
- // say data is in json
-  app.post('/movies', async (request, response) =>{
-    const newMovies = request.body;
-    console.log(newMovies);
-   //db.movies.insertMany(movies)
-
-      const result = await client
-   .db("b35we")
-   .collection("movies")
-   .insertMany(newMovies)
-   
-    response.send(result)
-  })
-  
+app.use("/movies", moviesRouter)
 
 
-//movie with id - to send only movie with the matched id
-//id -> :id
-//request.params -> to get id from URL
-app.get('/movies/:id', async (request, response) => {
-    const { id } = request.params // const { movieid } = useParams()
-    console.log(id);
-    // db.movies.fiindOne({id: "102"})
-    // const movie = movies.find((mv) => mv.id == id);
-    const movie = await client
-    .db("b35we")
-    .collection("movies")
-    .findOne({id:  id})
-    movie ? response.send(movie) : response.status(404).send({ message: "No movies found "});
-  })
+app.use("/users", usersRouter)
 
-  //Delete movie
-
-  app.delete('/movies/:id', async (request, response) => {
-    const { id } = request.params // const { movieid } = useParams()
-    console.log(id);
-    // db.movies.deleteOne({id: "102"})
-    // const movie = movies.find((mv) => mv.id == id);
-    const movie = await client
-    .db("b35we")
-    .collection("movies")
-    .deleteOne({id:  id})
-    movie ? response.send(movie) : response.status(404).send({ message: "No movies found to delete"});
-  })
 
 app.listen(PORT, () => console.log("Server Started on port:" , PORT))
 
-//Task 
-//movies - all the movies
-//movies?language=english  = only english movies
-//movies?language=english&rating=8 - filter by language & rating
-//movies?rating=8
 
-
-
-// map((mv, index) => 
-// <Msg key={index} id={index}/>)
-
-// { id} = useParams()
-
-// router -> movies/:id  -> /movies/0, /movies/1
-
-//mongo install -  npm i mongodb
-
-//CRUD
-// C - Create - POST
-// R - read - GET
-// U - Update - PUT
-// D - Delete - DELETE
