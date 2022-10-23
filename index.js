@@ -5,13 +5,25 @@ import { MongoClient } from 'mongodb'; //type -module
 import * as dotenv from 'dotenv'
 import { moviesRouter} from "./routes/movie.js"
 import { usersRouter} from "./routes/users.js"
+import cors from "cors";
 
-dotenv.config()
 
 // console.log(process.env);
+// var cors = require('cors')
+
+//put all keys from .env file to process.env
 
 export const app = express();
+app.use(cors());
+dotenv.config()
+//interpreter - converting body to json
+app.use(express.json())
+
+
+//env - environment variables
+
 const PORT = process.env.PORT;
+const MONGO_URL = process.env.MONGO_URL;
 
 // const movies = [
 //     {
@@ -96,7 +108,8 @@ const PORT = process.env.PORT;
 //   ];
 
   // Connection URL
-const MONGO_URL = process.env.MONGO_URL;
+
+
 
 async function createConnection() {
   const client = new MongoClient(MONGO_URL)
@@ -107,8 +120,7 @@ async function createConnection() {
 
 export const client =  await createConnection();
 
-//interpreter - converting body to json
-app.use(express.json())
+
 
 //REST API endpoints
 app.get('/', function (request, response) {
