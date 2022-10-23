@@ -2,6 +2,7 @@ import { genPassword, createUser, getUserByName } from "../helper.js";
 import express from "express";
 const router = express.Router()
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 
 router.post('/signup', async (request, response) => {
@@ -28,27 +29,31 @@ router.post('/signup', async (request, response) => {
 
 
 
-  // router.post('/login', async (request, response)  => {
-  //   const {username, password} = request.body;
-  //   console.log(username, password);
-  //   // const result = await addMovies(newMovies);
-  //   const userFromDB = await getUserByName(username);
-  //   console.log(userFromDB)
-  //   // username already exists
-  //   if(!userFromDB) {
-  //     response.status(400).send({ message: "Invalid credentials" })
-  //     return;
-  //   }
-  //      const storedPassword = userFromDB.password;
-  //    //password is matching or not
-  //   const isPasswordMatch = await bcrypt.compare(password, storedPassword)
-  //   if(!isPasswordMatch) {
-  //     response.status(400).send({ message: "Invalid credentials" })
-  //     return;
-  //   }
-  // response.send(isPasswordMatch)
+  router.post('/login', async (request, response)  => {
+    const {username, password} = request.body;
+    console.log(username, password);
+    // const result = await addMovies(newMovies);
+    const userFromDB = await getUserByName(username);
+    console.log(userFromDB)
+    // username already exists
+    if(!userFromDB) {
+      response.status(400).send({ message: "Invalid credentials" })
+      return;
+    }
+       const storedPassword = userFromDB.password;
+     //password is matching or not
+    const isPasswordMatch = await bcrypt.compare(password, storedPassword)
+    if(!isPasswordMatch) {
+      response.status(400).send({ message: "Invalid credentials" })
+      return;
+    }
+  
+    //token generate
+    const token  = jwt.sign({id: userFromDB._id }, process.env.SECRET_KEY)
+    // console.log(token)
+  response.send({message: "Successful login" , token: token})
 
-  // });
+  });
 
   export const usersRouter = router;
 

@@ -1,6 +1,6 @@
 import { getAllMovies, addMovies, updateMovieById, GetMovieById, deleteMovieById } from "../helper.js";
 import express from "express";
-
+import { auth } from "../middleware/auth.js"
 const router = express.Router()
 
 
@@ -26,7 +26,7 @@ router.post('/', async (request, response) => {
 
 
 //PUT movies
-router.put('/:id', async (request, response) => {
+router.put('/:id',  async (request, response) => {
   const { id } = request.params;
   const updateMovies = request.body;
   const result = await updateMovieById(id, updateMovies);
@@ -38,7 +38,7 @@ router.put('/:id', async (request, response) => {
 //movie with id - to send only movie with the matched id
 //id -> :id
 //request.params -> to get id from URL
-router.get('/:id', async (request, response) => {
+router.get('/:id',  async (request, response) => {
   const { id } = request.params; // const { movieid } = useParams()
 
   const movie = await GetMovieById(id);
